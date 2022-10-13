@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="5de90973-5d19-4ae3-a788-2d02bc944e48" >
+		<http:listener-connection host="localhost" port="8081" />
+	</http:listener-config>
+	<flow name="exampleFlow" doc:id="69d370ac-c04f-484b-a26d-11ba9ea3b02a" >
+		<http:listener doc:name="Listener" doc:id="f8bb68c2-5659-47d6-bd54-bae35038e4bb" config-ref="HTTP_Listener_config" path="/test"/>
+		<ee:transform doc:name="Transform Message" doc:id="91248f70-945a-4bc1-8a34-b5824a530f1f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+var a =[ {"ID": 234,"Name":"Subha","Salary":"40000","Gender":"Female",},
+	{"ID": 235,"Name":"Sri","Salary":"50000","Gender":"male"},
+	{"ID": 237,"Name":"John","Salary":"30000","Gender":"male"}
+]
+output application/json
+---
+a map(value,Index)->{
+	"ID":value.ID,
+	"NAME":value.Name,
+	"GENDER":value.Gender,
+	"SALARY":value.Salary
+}
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
